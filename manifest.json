@@ -1,0 +1,34 @@
+{
+  "os_version": "1.0.4",
+  "core": {
+    "index": "index.html",
+    "styles": "main/main.css",
+    "logic": "main/os_core.js"
+  },
+  "modules": [
+    {
+      "id": "messenger",
+      "name": "Claudia Messenger",
+      "description": "Encrypted SMS/MMS Interface",
+      "path": "apps/messenger/",
+      "version": "1.0.1",
+      "required_permissions": ["SMS", "CONTACTS"]
+    },
+    {
+      "id": "dialer",
+      "name": "Neural Dialer",
+      "description": "System Phone Interface",
+      "path": "apps/dialer/",
+      "version": "1.0.0",
+      "required_permissions": ["PHONE", "CALL_LOG"]
+    },
+    {
+      "id": "terminal",
+      "name": "Root Terminal",
+      "description": "Kernel Command Line",
+      "path": "apps/terminal/",
+      "version": "1.2.0",
+      "required_permissions": []
+    }
+  ]
+}
