@@ -1,54 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-<style>
-    /* Emergency Fallback Styles */
-    body { 
-        background-color: black !important; 
-        color: #00FFCC !important; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: center; 
-        height: 100vh; 
-        margin: 0; 
-    }
-    input { 
-        width: 80%; 
-        padding: 15px; 
-        margin: 10px; 
-        background: #111; 
-        border: 1px solid #00FFCC; 
-        color: white; 
-    }
-    button { 
-        width: 80%; 
-        padding: 15px; 
-        background: #00FFCC; 
-        color: black; 
-        font-weight: bold; 
-        border: none; 
-    }
-</style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="main/main.css">
+    <title>Claudia OS</title>
 </head>
-<body style="background: black; color: #00FFCC; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden;">
+<body>
 
-    <div id="login-container" style="width: 85%; max-width: 400px; text-align: center;">
-        <h1 style="text-shadow: 0 0 10px #00FFCC; margin-bottom: 30px;">CLAUDIA_OS</h1>
+    <div id="login-container">
+        <h1 class="neon-text">CLAUDIA_OS</h1>
+        <p id="kernel-status">KERNEL_STABLE</p>
         
-        <input type="text" id="username" placeholder="IDENTITY" 
-            style="width: 100%; box-sizing: border-box; background: black; border: 1px solid #00FFCC; color: white; padding: 15px; margin-bottom: 15px; outline: none;">
-        
-        <input type="password" id="pin" placeholder="PIN" 
-            style="width: 100%; box-sizing: border-box; background: black; border: 1px solid #00FFCC; color: white; padding: 15px; margin-bottom: 20px; outline: none;">
-        
-        <button id="auth-btn" 
-            style="width: 100%; background: #00FFCC; color: black; border: none; padding: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 0 15px #00FFCC;">
-            AUTHENTICATE
-        </button>
+        <div class="input-group">
+            <input type="text" id="username" placeholder="IDENTITY" autocomplete="off">
+            <input type="password" id="pin" placeholder="PIN">
+        </div>
+
+        <button id="auth-btn">AUTHENTICATE</button>
     </div>
 
     <script src="main/os_core.js"></script>
@@ -59,7 +28,7 @@
             if (typeof ClaudiaOS !== 'undefined') {
                 ClaudiaOS.login(u, p);
             } else {
-                alert("OS Core not found. Check GitHub sync.");
+                alert("CORE_OFFLINE: check main/os_core.js path");
             }
         };
     </script>
