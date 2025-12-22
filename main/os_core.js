@@ -1,28 +1,27 @@
 const ClaudiaOS = {
     init: function() {
-        console.log("OS Core Initialized");
-        // Trigger the hydration when the OS starts
+        console.log("Claudia OS: Logic Initialized");
+        // Ensure system modules are hydrated
         if (typeof AndroidInterface !== 'undefined') {
             AndroidInterface.hydrateSystem();
         }
     },
 
     login: function(username, pin) {
-        // Your specific login logic
         if (username.toLowerCase() === "don" && pin === "0415") {
-            alert("ACCESS GRANTED: Welcome Don.");
-            // Redirect to desktop or load modules
-            this.loadDesktop();
+            // Provide visual feedback that we are moving
+            document.getElementById('login-screen').innerHTML = "<h1 class='neon-text'>VERIFYING...</h1>";
+            
+            if (typeof AndroidInterface !== 'undefined') {
+                // This triggers the Kernel to download onboarding.html and then open it
+                AndroidInterface.syncAndNavigate("onboarding.html");
+            } else {
+                window.location.href = "onboarding.html";
+            }
         } else {
-            alert("ACCESS DENIED: Invalid Credentials.");
+            alert("IDENTITY ERROR");
         }
-    },
-
-    loadDesktop: function() {
-        document.getElementById('login-screen').innerHTML = "<h1>LOADING SYSTEM...</h1>";
-        // Here you would trigger the download of your 15+ apps
     }
 };
 
-// Start the OS logic
 ClaudiaOS.init();
