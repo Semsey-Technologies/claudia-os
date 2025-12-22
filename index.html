@@ -5,55 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <style>
         * { box-sizing: border-box; }
+        
         body, html {
             margin: 0; padding: 0;
-            width: 100vw; height: 100vh;
+            width: 100%; height: 100%;
             background: #000; color: #00FFCC;
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
             display: flex; justify-content: center; align-items: center;
-            overflow: hidden; /* Prevents scrolling */
+            overflow: hidden; 
         }
+
+        /* Use a fixed pixel max-width to stop the "Long Boxes" on wide screens */
         #login-container {
-            display: flex; flex-direction: column;
-            width: 80%; max-width: 300px;
+            display: flex; 
+            flex-direction: column;
+            width: 85%; 
+            max-width: 280px; 
             text-align: center;
+            padding: 20px;
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            background: rgba(0, 20, 20, 0.5);
         }
-        h1 { font-size: 1.5rem; text-shadow: 0 0 10px #00FFCC; }
+
+        h1 { 
+            font-size: 1.8rem; 
+            text-shadow: 0 0 10px #00FFCC; 
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
         input {
             width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            background: #111;
+            padding: 15px;
+            margin: 5px 0;
+            background: #000;
             border: 1px solid #00FFCC;
-            color: white;
-            font-size: 16px; /* Prevents iOS/Android auto-zoom on focus */
+            color: #fff;
+            font-size: 16px; 
+            text-align: center;
+            outline: none;
         }
+
         button {
             width: 100%;
             padding: 15px;
-            margin-top: 10px;
+            margin-top: 15px;
             background: #00FFCC;
             color: #000;
             font-weight: bold;
             border: none;
             cursor: pointer;
+            box-shadow: 0 0 10px #00FFCC;
+        }
+
+        /* Responsive Fix for Landscape */
+        @media (orientation: landscape) {
+            #login-container { max-height: 90vh; justify-content: center; }
+            h1 { font-size: 1.2rem; margin-bottom: 10px; }
+            input { padding: 8px; }
+            button { padding: 10px; margin-top: 5px; }
         }
     </style>
 </head>
 <body>
     <div id="login-container">
         <h1>CLAUDIA_OS</h1>
-        <input type="text" id="username" placeholder="IDENTITY">
+        <input type="text" id="username" placeholder="IDENTITY" autocomplete="off">
         <input type="password" id="pin" placeholder="PIN">
         <button id="auth-btn">AUTHENTICATE</button>
     </div>
+
     <script src="main/os_core.js"></script>
     <script>
         document.getElementById('auth-btn').onclick = () => {
             const u = document.getElementById('username').value;
             const p = document.getElementById('pin').value;
-            if(typeof ClaudiaOS !== 'undefined') ClaudiaOS.login(u, p);
-            else alert("Logic not loaded");
+            if(typeof ClaudiaOS !== 'undefined') {
+                ClaudiaOS.login(u, p);
+            } else {
+                alert("OS Logic Offline");
+            }
         };
     </script>
 </body>
