@@ -1,5 +1,7 @@
-/* static/onboarding/onboarding.js */
-
+/**
+ * CLAUDIA OS - Onboarding Logic
+ * Handles User Identity and System Permissions
+ */
 console.log("ONBOARDING: Module Loaded");
 
 const OB = {
@@ -37,15 +39,18 @@ const OB = {
             return;
         }
 
+        // Save to LocalStorage for use in Desktop.html
         localStorage.setItem('claudia_user_handle', handle);
+        
         if(pinInput && pinInput.value.trim().length > 0) {
             localStorage.setItem('claudia_user_pin', pinInput.value.trim());
         }
 
-        if (handle === "SEMSEY") {
-            localStorage.setItem('claudia_user_role', 'ADMIN');
+        // Admin Detection (Syncs with your os_core logic)
+        if (handle === "SEMSEY" || handle === "DON") {
+            localStorage.setItem('user_role', 'admin');
         } else {
-            localStorage.setItem('claudia_user_role', 'USER');
+            localStorage.setItem('user_role', 'user');
         }
 
         document.getElementById('ob-identity').classList.add('hidden');
@@ -61,22 +66,22 @@ const OB = {
         if (container) {
             if (step.id === "permissions") {
                 container.innerHTML = `
-                    <h2>${step.title}</h2>
+                    <h2 style="color:#00FFCC;">${step.title}</h2>
                     <p>${step.content}</p>
-                    <div style="display:flex; flex-direction:column; gap:15px; margin-top:20px;">
-                        <button id="btn-perm-overlay" onclick="OB.askOverlay()" class="perm-btn"
-                                style="border:1px solid #555; background:rgba(0,0,0,0.5); padding:15px; color:#aaa; text-align:left; cursor:pointer;">
+                    <div style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
+                        <button id="btn-perm-overlay" onclick="OB.askOverlay()" 
+                                style="border:1px solid #555; background:rgba(0,0,0,0.5); padding:12px; color:#aaa; text-align:left; cursor:pointer;">
                             [ ] ENABLE SYSTEM OVERLAY
                         </button>
-                        <button id="btn-perm-storage" onclick="OB.askStorage()" class="perm-btn"
-                                style="border:1px solid #555; background:rgba(0,0,0,0.5); padding:15px; color:#aaa; text-align:left; cursor:pointer;">
+                        <button id="btn-perm-storage" onclick="OB.askStorage()" 
+                                style="border:1px solid #555; background:rgba(0,0,0,0.5); padding:12px; color:#aaa; text-align:left; cursor:pointer;">
                             [ ] GRANT STORAGE ACCESS
                         </button>
                     </div>
                 `;
                 this.checkPermissionStatus();
             } else {
-                container.innerHTML = `<h2>${step.title}</h2><p>${step.content}</p>`;
+                container.innerHTML = `<h2 style="color:#00FFCC;">${step.title}</h2><p>${step.content}</p>`;
             }
         }
 
@@ -106,10 +111,6 @@ const OB = {
                 overlayBtn.style.borderColor = "#00FFCC";
                 overlayBtn.style.color = "#00FFCC";
                 overlayBtn.disabled = true;
-            } else {
-                overlayBtn.innerHTML = "<b>[!] ENABLE SYSTEM OVERLAY</b>";
-                overlayBtn.style.borderColor = "#FF0055";
-                overlayBtn.style.color = "#FF0055";
             }
         }
 
@@ -120,10 +121,6 @@ const OB = {
                 storageBtn.style.borderColor = "#00FFCC";
                 storageBtn.style.color = "#00FFCC";
                 storageBtn.disabled = true;
-            } else {
-                storageBtn.innerHTML = "<b>[!] GRANT STORAGE ACCESS</b>";
-                storageBtn.style.borderColor = "#FF0055";
-                storageBtn.style.color = "#FF0055";
             }
         }
     },
@@ -131,15 +128,14 @@ const OB = {
     askOverlay: function() {
         if (typeof AndroidInterface !== 'undefined') {
             AndroidInterface.requestOverlayPermission();
-            setTimeout(() => this.checkPermissionStatus(), 1000);
-            setTimeout(() => this.checkPermissionStatus(), 3000);
+            setTimeout(() => this.checkPermissionStatus(), 1500);
         }
     },
 
     askStorage: function() {
         if (typeof AndroidInterface !== 'undefined') {
             AndroidInterface.requestStoragePermission();
-            setTimeout(() => this.checkPermissionStatus(), 2000);
+            setTimeout(() => this.checkPermissionStatus(), 1500);
         }
     },
 
@@ -151,43 +147,36 @@ const OB = {
         }
     },
 
-    prevStep: function() {
-        if (this.currentStep > 0) {
-            this.loadStep(this.currentStep - 1);
-        } else {
-            document.getElementById('ob-wizard').classList.add('hidden');
-            document.getElementById('ob-identity').classList.remove('hidden');
-        }
-    },
-
-    skipStep: function() { this.nextStep(); },
-
     finishSetup: function() {
-        console.log("Onboarding: Setup Complete.");
-        localStorage.setItem('claudia_setup_complete', 'true');
-        if (typeof OS !== 'undefined' && typeof OS.loadModule === 'function') {
-            OS.loadModule('desktop');
+        console.log("Onboarding: Finalizing...");
+        localStorage.setItem('onboarding_complete', 'true');
+        
+        // Use the Centralized Navigator from os_core.js
+        if (typeof ClaudiaOS !== 'undefined') {
+            ClaudiaOS.navigate("desktop.html");
         } else {
-            window.location.reload();
+            window.location.href = "desktop.html";
         }
     },
 
     skipAll: function() {
-        localStorage.setItem('claudia_setup_complete', 'true');
+        localStorage.setItem('onboarding_complete', 'true');
         localStorage.setItem('claudia_user_handle', 'GUEST');
-        if (typeof OS !== 'undefined' && typeof OS.loadModule === 'function') {
-            OS.loadModule('desktop');
+        
+        if (typeof ClaudiaOS !== 'undefined') {
+            ClaudiaOS.navigate("desktop.html");
         } else {
-            window.location.reload();
+            window.location.href = "desktop.html";
         }
     }
 };
 
+// Initial Splash Timeout
 (function initOnboarding() {
     setTimeout(() => {
         const splash = document.getElementById('ob-splash');
         const identity = document.getElementById('ob-identity');
-        if (splash) splash.classList.add('hidden');
-        if (identity) identity.classList.remove('hidden');
+        if (splash) splash.style.display = 'none';
+        if (identity) identity.style.display = 'block';
     }, 2500);
 })();

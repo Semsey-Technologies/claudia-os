@@ -2,55 +2,81 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <link rel="stylesheet" href="main/main.css">
     <title>Claudia OS - Setup</title>
-</head>
-<body style="background: black; color: #00FFCC; font-family: monospace; padding: 20px;">
-
-    <div id="setup-container">
-        <h2 style="text-shadow: 0 0 10px #00FFCC;">NEURAL_ONBOARDING</h2>
-        <p id="setup-text">Initializing synchronization with user identity: [DON]</p>
+    <style>
+        * { box-sizing: border-box; }
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background: #000; color: #00FFCC;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+        .container {
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            height: 100vh; width: 100vw;
+            padding: 30px; text-align: center;
+        }
+        .hidden { display: none !important; }
         
-        <div id="progress-bar" style="width: 100%; border: 1px solid #00FFCC; height: 10px; margin-bottom: 20px;">
-            <div id="progress-fill" style="width: 0%; background: #00FFCC; height: 100%; transition: width 0.5s;"></div>
-        </div>
+        /* UI Elements */
+        input {
+            width: 280px; padding: 15px; margin: 10px 0;
+            background: #111; border: 1px solid #00FFCC;
+            color: white; font-size: 16px; text-align: center; outline: none;
+        }
+        button {
+            width: 280px; padding: 15px; margin-top: 10px;
+            background: #00FFCC; color: black;
+            font-weight: bold; border: none; cursor: pointer;
+            box-shadow: 0 0 10px #00FFCC;
+        }
+        .progress-container {
+            width: 280px; border: 1px solid #00FFCC; height: 12px; margin: 20px 0;
+        }
+        #progress-fill {
+            width: 0%; background: #00FFCC; height: 100%; transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
 
-        <div id="controls">
-            <button onclick="startInitialization()" id="init-btn">INITIALIZE CORE</button>
+    <div id="ob-splash" class="container">
+        <h2 style="text-shadow: 0 0 10px #00FFCC;">NEURAL_ONBOARDING</h2>
+        <p>Initializing secure environment...</p>
+        <div class="progress-container">
+            <div id="splash-fill" style="width: 30%; background: #00FFCC; height: 100%;"></div>
         </div>
     </div>
 
-    <script src="main/os_core.js"></script>
-    <script>
-        function startInitialization() {
-            const btn = document.getElementById('init-btn');
-            const fill = document.getElementById('progress-fill');
-            const text = document.getElementById('setup-text');
-            
-            btn.style.display = 'none';
-            text.innerText = "Syncing 15+ Apps from Cloud...";
-            
-            // Artificial progress for effect, then navigate
-            let width = 0;
-            const interval = setInterval(() => {
-                if (width >= 100) {
-                    clearInterval(interval);
-                    // Save progress locally so we skip this next time
-                    localStorage.setItem('onboarding_complete', 'true');
-                    
-                    // Move to the final Desktop
-                    if (typeof AndroidInterface !== 'undefined') {
-                        AndroidInterface.syncAndNavigate("desktop.html");
-                    } else {
-                        window.location.href = "desktop.html";
-                    }
-                } else {
-                    width += 5;
-                    fill.style.width = width + '%';
-                }
-            }, 100);
-        }
-    </script>
+    <div id="ob-identity" class="container hidden">
+        <h2 style="text-shadow: 0 0 10px #00FFCC;">USER_IDENTITY</h2>
+        <p>Define your system handle and secure PIN.</p>
+        <input type="text" id="ob-name" placeholder="HANDLE (e.g. DON)" autocomplete="off">
+        <input type="password" id="ob-pin" placeholder="NEW PIN (OPTIONAL)">
+        <button onclick="OB.nextIdentity()">CONFIRM IDENTITY</button>
+        <p style="font-size: 0.7rem; margin-top: 20px; opacity: 0.6;" onclick="OB.skipAll()">[ SKIP INITIALIZATION ]</p>
+    </div>
+
+    <div id="ob-wizard" class="container hidden">
+        <div id="ob-step-container">
+            </div>
+        
+        <div class="progress-container">
+            <div id="progress-fill"></div>
+        </div>
+
+        <div id="controls" style="display: flex; flex-direction: column; gap: 10px;">
+            <button id="ob-next">NEXT ►</button>
+            <p id="ob-skip-step" style="font-size: 0.7rem; opacity: 0.6; cursor: pointer;" onclick="OB.skipStep()">SKIP STEP</p>
+        </div>
+    </div>
+
+    <script src="os_core.js"></script>
+    <script src="onboarding.js"></script>
+
 </body>
 </html>

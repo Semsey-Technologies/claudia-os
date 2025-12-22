@@ -1,97 +1,123 @@
-/* static/onboarding/onboarding.css */
+/* CLAUDIA OS - Onboarding Styles
+   Merges Cyberpunk aesthetic with mobile-fixed layout
+*/
+
+:root {
+    --primary: #00FFCC;
+    --bg: #000000;
+    --glass: rgba(0, 255, 204, 0.05);
+    --border: rgba(0, 255, 204, 0.2);
+    --error: #FF0055;
+}
+
+/* GLOBAL ONBOARDING RESET */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg);
+    color: var(--primary);
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+}
 
 /* SPLASH SCREEN */
-#ob-splash.screen {
-    padding: 0 !important;
+#ob-splash {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 100vh;
     background: var(--bg);
 }
 
-.ob-center {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 30px;
-    border: 1px solid rgba(0, 255, 204, 0.2);
-    background: var(--glass);
-    box-shadow: 0 0 30px rgba(0, 255, 204, 0.05);
-    backdrop-filter: blur(5px);
-    text-align: center;
-}
-
 .ob-logo {
-    font-family: 'Courier New', monospace;
     font-size: 28px;
     font-weight: bold;
-    color: var(--primary);
     text-shadow: 0 0 10px var(--primary);
     letter-spacing: 4px;
+    margin-bottom: 20px;
     animation: glow-scan 3s infinite ease-in-out;
 }
 
-/* IDENTITY SCREEN */
-#ob-identity {
+/* CENTERED CONTAINERS (The 280px Fix) */
+.ob-center, #ob-identity, #ob-wizard {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-
-    /* FIX: Push down to clear status bar/gesture area */
-    padding-top: 100px;
-    box-sizing: border-box;
-    max-width: 500px;
+    width: 280px !important; /* Forces narrow layout to prevent stretching */
     margin: 0 auto;
-}
-
-#ob-identity h1 {
     text-align: center;
-    color: var(--primary);
-    text-shadow: 0 0 10px var(--primary);
-    margin-bottom: 30px;
-    letter-spacing: 2px;
-    font-size: 24px;
 }
 
-#ob-identity .input-group {
-    margin-bottom: 20px;
-    border: 1px solid var(--primary);
-    background: var(--glass);
-    width: 100%;
+#ob-identity {
+    padding-top: 20vh; /* Responsive push down */
 }
 
-#ob-identity button {
-    width: 100%;
-    margin-bottom: 10px;
-    font-size: 16px;
-    letter-spacing: 2px;
-}
-
-/* WIZARD SCREEN */
-#ob-wizard {
-    padding-top: 60px !important;
-}
-
+/* WIZARD BOX */
 #ob-step-container {
-    flex-grow: 1;
     background: var(--glass);
-    border: 1px solid var(--primary);
-    box-shadow: 0 0 15px rgba(0, 255, 204, 0.1);
+    border: 1px solid var(--border);
     padding: 20px;
-    overflow-y: auto;
+    margin-bottom: 20px;
+    min-height: 200px;
+    text-align: left;
 }
 
-.ob-nav-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-    margin-top: auto;
+#ob-step-container h2 {
+    font-size: 1.2rem;
+    margin-top: 0;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
 }
 
-.ob-nav-row button {
-    flex: 1;
+/* UI ELEMENTS */
+input {
+    width: 100%;
     padding: 15px;
+    margin: 10px 0;
+    background: #111;
+    border: 1px solid var(--primary);
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 10px;
+    background: var(--primary);
+    color: #000;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--primary);
+    transition: transform 0.1s;
+}
+
+button:active { transform: scale(0.98); }
+
+.perm-btn {
+    font-size: 0.8rem;
+    background: rgba(0,0,0,0.5) !important;
+    color: var(--primary) !important;
+    border: 1px solid var(--border) !important;
+    text-align: left !important;
+    box-shadow: none !important;
+}
+
+/* ANIMATIONS */
+@keyframes glow-scan {
+    0%, 100% { opacity: 1; text-shadow: 0 0 10px var(--primary); }
+    50% { opacity: 0.7; text-shadow: 0 0 20px var(--primary); }
 }
 
 .hidden { display: none !important; }
+
+/* LANDSCAPE TWEAK */
+@media (orientation: landscape) and (max-height: 500px) {
+    #ob-identity { padding-top: 5vh; }
+    .ob-logo { font-size: 20px; margin-bottom: 10px; }
+}
