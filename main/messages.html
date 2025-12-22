@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { background: #000; color: #00FFCC; font-family: monospace; padding: 20px; }
+        .msg-entry { border-bottom: 1px solid rgba(0,255,204,0.3); padding: 10px; margin-bottom: 10px; }
+        input { background: #111; border: 1px solid #00FFCC; color: #fff; padding: 10px; width: 100%; margin-top: 10px; }
+        button { background: #00FFCC; color: #000; border: none; padding: 10px; margin-top: 5px; cursor: pointer; width: 100%; font-weight: bold; }
+        #inbox { height: 300px; overflow-y: auto; margin-bottom: 20px; border: 1px solid #00FFCC55; padding: 5px; }
+    </style>
+</head>
+<body>
+    <h2>NEURAL_MESSENGER</h2>
+    
+    <div id="inbox">Loading messages...</div>
+
+    <input type="text" id="target-phone" placeholder="TARGET_PHONE_NUMBER">
+    <input type="text" id="sms-body" placeholder="MESSAGE_CONTENT">
+    <button onclick="send()">TRANSMIT_DATA</button>
+    <button onclick="window.location.href='desktop.html'" style="background:transparent; color:#00FFCC; border:1px solid #00FFCC;">RETURN_TO_CORE</button>
+
+    <script>
+        // Call bridge to get messages on load
+        window.onload = () => { if(window.AndroidInterface) AndroidInterface.fetchMessages(); };
+
+        // Callback from Kotlin
+        window.onMessagesLoaded = (msgs) => {
+            const inbox = document.getElementById('inbox');
+            inbox.innerHTML = msgs.map(m => `
+                <div class="msg-entry">
+                    <strong>${m.from}</strong><br>${m.body}
+                </div>
+            `).join('');
+        };
+
+        function send() {
+            const num = document.getElementById('target-phone').value;
+            const msg = document.getElementById('sms-body').value;
+            if(window.AndroidInterface) {
+                AndroidInterface.sendSMS(num, msg);
+            }
+        }
+    </script>
+</body>
+</html>

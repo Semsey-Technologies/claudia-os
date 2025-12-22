@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { background: #000; color: #00FFCC; font-family: monospace; padding: 20px; }
+        .setting-row { margin-bottom: 25px; border-bottom: 1px solid #00FFCC33; padding-bottom: 10px; }
+        label { display: block; margin-bottom: 10px; font-size: 0.8rem; }
+        select, input { background: #111; border: 1px solid #00FFCC; color: #fff; padding: 10px; width: 100%; }
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        button { flex: 1; background: #00FFCC; color: #000; border: none; padding: 12px; font-weight: bold; cursor: pointer; }
+        .secondary { background: transparent; color: #00FFCC; border: 1px solid #00FFCC; }
+    </style>
+</head>
+<body>
+    <h3>BACKUP_PROTOCOLS</h3>
+
+    <div class="setting-row">
+        <label>AUTOMATED_EXPORT</label>
+        <select id="auto-enabled">
+            <option value="false">DISABLED</option>
+            <option value="true">ENABLED</option>
+        </select>
+    </div>
+
+    <div class="setting-row">
+        <label>FREQUENCY</label>
+        <select id="freq">
+            <option value="daily">EVERY_24_HOURS</option>
+            <option value="weekly">EVERY_7_DAYS</option>
+        </select>
+    </div>
+
+    <div class="setting-row">
+        <label>TARGET_NODE</label>
+        <select id="loc">
+            <option value="local">LOCAL_STORAGE</option>
+            <option value="cloud" disabled>CLOUD_LINK (LOCKED)</option>
+        </select>
+    </div>
+
+    <div class="btn-group">
+        <button onclick="save()">SAVE_CONFIG</button>
+        <button onclick="manual()" class="secondary">RUN_MANUAL_EXPORT</button>
+    </div>
+    
+    <button onclick="window.location.href='messages.html'" style="margin-top:20px;" class="secondary">BACK_TO_MESSAGES</button>
+
+    <script>
+        window.onload = () => { if(window.AndroidInterface) AndroidInterface.getBackupSettings(); };
+
+        window.onSettingsLoaded = (data) => {
+            document.getElementById('auto-enabled').value = data.enabled.toString();
+            document.getElementById('freq').value = data.frequency;
+            document.getElementById('loc').value = data.location;
+        };
+
+        function save() {
+            const e = document.getElementById('auto-enabled').value === "true";
+            const f = document.getElementById('freq').value;
+            const l = document.getElementById('loc').value;
+            if(window.AndroidInterface) AndroidInterface.saveBackupSettings(e, f, l);
+        }
+
+        function manual() {
+            if(window.AndroidInterface) AndroidInterface.manualExport();
+        }
+    </script>
+</body>
+</html>
