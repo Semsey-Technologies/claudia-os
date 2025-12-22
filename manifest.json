@@ -3,7 +3,7 @@
   "core": {
     "index": "index.html",
     "styles": "main/main.css",
-    "logic": "os_core.js"
+    "logic": "main/os_core.js"
   },
   "modules": [
     {
