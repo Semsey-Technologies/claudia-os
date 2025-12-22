@@ -2,34 +2,58 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="main/main.css">
-    <title>Claudia OS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <style>
+        * { box-sizing: border-box; }
+        body, html {
+            margin: 0; padding: 0;
+            width: 100vw; height: 100vh;
+            background: #000; color: #00FFCC;
+            font-family: monospace;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; /* Prevents scrolling */
+        }
+        #login-container {
+            display: flex; flex-direction: column;
+            width: 80%; max-width: 300px;
+            text-align: center;
+        }
+        h1 { font-size: 1.5rem; text-shadow: 0 0 10px #00FFCC; }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: #111;
+            border: 1px solid #00FFCC;
+            color: white;
+            font-size: 16px; /* Prevents iOS/Android auto-zoom on focus */
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+            background: #00FFCC;
+            color: #000;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-
     <div id="login-container">
-        <h1 class="neon-text">CLAUDIA_OS</h1>
-        <p id="kernel-status">KERNEL_STABLE</p>
-        
-        <div class="input-group">
-            <input type="text" id="username" placeholder="IDENTITY" autocomplete="off">
-            <input type="password" id="pin" placeholder="PIN">
-        </div>
-
+        <h1>CLAUDIA_OS</h1>
+        <input type="text" id="username" placeholder="IDENTITY">
+        <input type="password" id="pin" placeholder="PIN">
         <button id="auth-btn">AUTHENTICATE</button>
     </div>
-
     <script src="main/os_core.js"></script>
     <script>
         document.getElementById('auth-btn').onclick = () => {
             const u = document.getElementById('username').value;
             const p = document.getElementById('pin').value;
-            if (typeof ClaudiaOS !== 'undefined') {
-                ClaudiaOS.login(u, p);
-            } else {
-                alert("CORE_OFFLINE: check main/os_core.js path");
-            }
+            if(typeof ClaudiaOS !== 'undefined') ClaudiaOS.login(u, p);
+            else alert("Logic not loaded");
         };
     </script>
 </body>
