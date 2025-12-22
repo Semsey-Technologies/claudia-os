@@ -1,32 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Claudia OS</title>
     <link rel="stylesheet" href="main/main.css">
 </head>
-<body style="background-color: black; color: #00FFCC; font-family: monospace;">
+<body style="background: black; color: #00FFCC; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden;">
 
-    <div id="login-screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
-        <h1>CLAUDIA_OS</h1>
-        <input type="text" id="username" placeholder="IDENTITY" style="background: black; border: 1px solid #00FFCC; color: #00FFCC; margin: 10px; padding: 10px;">
-        <input type="password" id="pin" placeholder="PIN" style="background: black; border: 1px solid #00FFCC; color: #00FFCC; margin: 10px; padding: 10px;">
-        <button id="auth-btn" style="background: #00FFCC; color: black; border: none; padding: 10px 20px; font-weight: bold;">AUTHENTICATE</button>
+    <div id="login-container" style="width: 85%; max-width: 400px; text-align: center;">
+        <h1 style="text-shadow: 0 0 10px #00FFCC; margin-bottom: 30px;">CLAUDIA_OS</h1>
+        
+        <input type="text" id="username" placeholder="IDENTITY" 
+            style="width: 100%; box-sizing: border-box; background: black; border: 1px solid #00FFCC; color: white; padding: 15px; margin-bottom: 15px; outline: none;">
+        
+        <input type="password" id="pin" placeholder="PIN" 
+            style="width: 100%; box-sizing: border-box; background: black; border: 1px solid #00FFCC; color: white; padding: 15px; margin-bottom: 20px; outline: none;">
+        
+        <button id="auth-btn" 
+            style="width: 100%; background: #00FFCC; color: black; border: none; padding: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 0 15px #00FFCC;">
+            AUTHENTICATE
+        </button>
     </div>
 
     <script src="main/os_core.js"></script>
-    
     <script>
-        // Directly binding the button to the function
-        document.getElementById('auth-btn').onclick = function() {
+        document.getElementById('auth-btn').onclick = () => {
             const u = document.getElementById('username').value;
             const p = document.getElementById('pin').value;
-            
             if (typeof ClaudiaOS !== 'undefined') {
                 ClaudiaOS.login(u, p);
             } else {
-                alert("CRITICAL ERROR: OS_CORE NOT LOADED");
+                alert("OS Core not found. Check GitHub sync.");
             }
         };
     </script>
