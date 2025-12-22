@@ -1,49 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claudia OS Init</title>
-
-    <link rel="stylesheet" href="../main/main.css">
-    <link rel="stylesheet" href="onboarding.css">
+    <link rel="stylesheet" href="main/main.css">
+    <title>Claudia OS - Setup</title>
 </head>
+<body style="background: black; color: #00FFCC; font-family: monospace; padding: 20px;">
 
-<body>
+    <div id="setup-container">
+        <h2 style="text-shadow: 0 0 10px #00FFCC;">NEURAL_ONBOARDING</h2>
+        <p id="setup-text">Initializing synchronization with user identity: [DON]</p>
+        
+        <div id="progress-bar" style="width: 100%; border: 1px solid #00FFCC; height: 10px; margin-bottom: 20px;">
+            <div id="progress-fill" style="width: 0%; background: #00FFCC; height: 100%; transition: width 0.5s;"></div>
+        </div>
 
-<div id="ob-splash" class="screen">
-    <div class="ob-center">
-        <div class="ob-logo">SEMSEY TECH</div>
-        <div class="ob-sub">INITIALIZING CLAUDIA.OS</div>
-    </div>
-</div>
-
-<div id="ob-identity" class="screen hidden">
-    <h1>IDENTIFY USER</h1>
-
-    <div class="input-group">
-        <input id="ob-name" type="text" placeholder="ENTER HANDLE..." autocomplete="off">
+        <div id="controls">
+            <button onclick="startInitialization()" id="init-btn">INITIALIZE CORE</button>
+        </div>
     </div>
 
-    <div class="input-group">
-        <input id="ob-pin" type="password" placeholder="PIN (OPTIONAL)" autocomplete="off">
-    </div>
-
-    <button class="btn-launch" onclick="OB.nextIdentity()">INITIALIZE</button>
-    <button class="btn-close" onclick="OB.skipAll()">SKIP SETUP</button>
-</div>
-
-<div id="ob-wizard" class="screen hidden">
-    <div id="ob-step-container">
-    </div>
-
-    <div class="ob-nav-row">
-        <button id="ob-prev" onclick="OB.prevStep()">◄ BACK</button>
-        <button id="ob-skip-step" class="btn-close" onclick="OB.skipStep()">SKIP</button>
-        <button id="ob-next" onclick="OB.nextStep()">NEXT ►</button>
-    </div>
-</div>
-
-<script src="onboarding.js?v=1"></script>
+    <script src="main/os_core.js"></script>
+    <script>
+        function startInitialization() {
+            const btn = document.getElementById('init-btn');
+            const fill = document.getElementById('progress-fill');
+            const text = document.getElementById('setup-text');
+            
+            btn.style.display = 'none';
+            text.innerText = "Syncing 15+ Apps from Cloud...";
+            
+            // Artificial progress for effect, then navigate
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    // Save progress locally so we skip this next time
+                    localStorage.setItem('onboarding_complete', 'true');
+                    
+                    // Move to the final Desktop
+                    if (typeof AndroidInterface !== 'undefined') {
+                        AndroidInterface.syncAndNavigate("desktop.html");
+                    } else {
+                        window.location.href = "desktop.html";
+                    }
+                } else {
+                    width += 5;
+                    fill.style.width = width + '%';
+                }
+            }, 100);
+        }
+    </script>
 </body>
 </html>

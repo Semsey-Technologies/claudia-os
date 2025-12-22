@@ -1,7 +1,6 @@
 const ClaudiaOS = {
     init: function() {
-        console.log("Claudia OS: Logic Initialized");
-        // Ensure system modules are hydrated
+        console.log("Claudia OS Soul: Online");
         if (typeof AndroidInterface !== 'undefined') {
             AndroidInterface.hydrateSystem();
         }
@@ -9,19 +8,17 @@ const ClaudiaOS = {
 
     login: function(username, pin) {
         if (username.toLowerCase() === "don" && pin === "0415") {
-            // Provide visual feedback that we are moving
-            document.getElementById('login-screen').innerHTML = "<h1 class='neon-text'>VERIFYING...</h1>";
+            // Check if we have already onboarded
+            const status = localStorage.getItem('onboarding_complete');
             
-            if (typeof AndroidInterface !== 'undefined') {
-                // This triggers the Kernel to download onboarding.html and then open it
-                AndroidInterface.syncAndNavigate("onboarding.html");
+            if (status === 'true') {
+                AndroidInterface.syncAndNavigate("desktop.html");
             } else {
-                window.location.href = "onboarding.html";
+                AndroidInterface.syncAndNavigate("onboarding.html");
             }
         } else {
-            alert("IDENTITY ERROR");
+            alert("IDENTITY MISMATCH.");
         }
     }
 };
-
 ClaudiaOS.init();
