@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { margin: 0; padding: 0; background: transparent; font-family: monospace; overflow: hidden; }
+        #shade-container {
+            width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px);
+            display: flex; flex-direction: column; padding-top: 50px;
+            animation: slideDown 0.25s ease-out;
+        }
+        @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+        .shade-header { padding: 15px; text-align: center; border-bottom: 1px solid #00FFCC; color: #00FFCC; letter-spacing: 2px; font-weight: bold; }
+        #notif-list { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .notif-card { background: rgba(0, 255, 204, 0.08); border-left: 3px solid #00FFCC; padding: 12px; border-radius: 4px; color: #fff; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        .n-pkg { font-size: 10px; color: #aaa; text-transform: uppercase; margin-bottom: 2px; }
+        .n-title { font-size: 13px; font-weight: bold; color: #00FFCC; margin-bottom: 2px; }
+        .n-text { font-size: 12px; color: #ddd; }
+        .close-handle { height: 50px; background: rgba(0,255,204,0.1); display: flex; align-items: center; justify-content: center; color: #00FFCC; cursor: pointer; border-top: 1px solid #00FFCC; }
+    </style>
+</head>
+<body>
+<div id="shade-container">
+    <div class="shade-header">SYSTEM LOGS</div>
+    <div id="notif-list"><div style="text-align:center; color:#555; margin-top:50px;">NO SIGNAL</div></div>
+    <div class="close-handle" onclick="AndroidShade.closeShade()">CLOSE SHADE</div>
+</div>
+<script>
+    function addNotification(pkg, title, text) {
+        const list = document.getElementById('notif-list');
+        if(list.innerText.includes("NO SIGNAL")) list.innerHTML = "";
+        const item = document.createElement('div');
+        item.className = 'notif-card';
+        item.innerHTML = `<div class="n-pkg">${pkg}</div><div class="n-title">${title}</div><div class="n-text">${text}</div>`;
+        list.insertBefore(item, list.firstChild);
+    }
+</script>
+</body>
+</html>

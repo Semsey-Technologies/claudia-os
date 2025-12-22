@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050505">
+    <title>Claudia OS</title>
+    
+    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="drawer.css?v=5">
+</head>
+<body>
+
+    <div id="custom-status-bar" class="hidden">
+        <div id="hud-time">12:00</div>
+        <div style="letter-spacing: 2px; font-weight: bold;">CLAUDIA</div>
+        <div id="hud-batt">100%</div>
+    </div>
+
+    <div id="desktop-view" class="screen">
+        
+        <div class="header-container">
+            <h1>
+                <span class="letter">C</span><span class="letter">L</span><span class="letter">A</span>
+                <span class="letter">U</span><span class="letter">D</span><span class="letter">I</span>
+                <span class="letter">A</span><span class="letter">.</span><span class="letter">S</span>
+                <span class="letter">Y</span><span class="letter">S</span>
+            </h1>
+            <div class="gear-icon" onclick="toggleView('settings')">⚙️</div>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="cmd-text" placeholder="ENTER COMMAND..." autocomplete="off"/>
+            <select id="cmd-device">
+                <option value="linux">LINUX</option>
+                <option value="windows">WINDOWS</option>
+                <option value="phone">PHONE</option>
+            </select>
+        </div>
+        <button onclick="sendCommand()">>> EXECUTE PROTOCOL</button>
+
+        <div class="input-group" style="margin-top: 10px; flex-direction: column;">
+            <label style="font-size: 10px; color: #666;">SEND FILE TO SERVER</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="file" id="file-upload" style="font-size: 12px; width: 100%;">
+                <button onclick="uploadFile()" style="padding: 10px;">UPLOAD</button>
+            </div>
+        </div>
+
+        <div style="flex-grow: 1;"></div>
+
+        <button class="btn-launch" onclick="toggleView('drawer')">[ OPEN APP DRAWER ]</button>
+    </div>
+
+    <div id="drawer-view" class="screen hidden">
+        <div class="header-container">
+             <h1>CLAUDIA.APP</h1>
+             <div class="gear-icon" onclick="toggleView('settings')">⚙️</div>
+        </div>
+        
+        <button class="btn-close" onclick="toggleView('desktop')">&lt; RETURN TO DESKTOP</button>
+        
+        <div class="drawer-tabs">
+            <div id="tab-android" class="tab-btn" onclick="switchDrawerTab('android')">ANDROID</div>
+            <div id="tab-windows" class="tab-btn" onclick="switchDrawerTab('windows')">WINDOWS</div>
+        </div>
+
+        <div id="app-grid"></div>
+
+        <div class="category-tabs">
+            <div class="cat-btn active">ALL</div>
+            <div class="cat-btn">SYSTEM</div>
+        </div>
+    </div>
+
+    <div id="settings-view" class="screen hidden">
+        <h2 style="text-align: center; margin-bottom: 30px; color: var(--primary);">SYSTEM CONFIG</h2>
+
+        <div class="setting-row">
+            <span class="setting-label">FULLSCREEN (HIDE BARS)</span>
+            <div id="tog-full" class="toggle-switch" onclick="toggleSetting('fullscreen')"></div>
+        </div>
+
+        <div class="setting-row">
+            <span class="setting-label">CUSTOM CLAUDIA HUD</span>
+            <div id="tog-hud" class="toggle-switch" onclick="toggleSetting('hud')"></div>
+        </div>
+
+        <div style="flex-grow: 1;"></div>
+        
+        <button onclick="window.location.reload(true)" style="margin-top: 20px;">REBOOT UI</button>
+        <button class="btn-close" onclick="toggleView('desktop')" style="margin-top: 10px;">[ EXIT CONFIG ]</button>
+    </div>
+
+    <div id="custom-nav-bar" class="hidden">
+        <div class="nav-btn" onclick="window.history.back()">◄</div>
+        <div class="nav-btn" onclick="toggleView('desktop')">●</div>
+        <div class="nav-btn" onclick="toggleView('drawer')">◼</div>
+    </div>
+
+    <div id="status">INITIALIZING SYSTEM...</div>
+
+    <script src="drawer.js?v=5"></script>
+
+    <script>
+        // --- MAIN SYSTEM CORE ---
+        let SERVER_URL = ""; 
+
+        window.onload = async function() {
+            const status = document.getElementById('status');
+            if (typeof ClaudiaHost !== 'undefined') status.innerText = "ANDROID HOST DETECTED.";
+
+            try {
+                const response = await fetch('./config.json');
+                const config = await response.json();
+                SERVER_URL = `http://${config.server_ip}:${config.server_port}/command`;
+                
+                if(status.innerText === "INITIALIZING SYSTEM...") {
+                    status.innerText = "LINK ESTABLISHED: " + config.server_ip;
+                }
+                
+                if(typeof loadApps === 'function') loadApps(); 
+            } catch (e) { status.innerText = "CONFIG LOAD FAILED."; }
+        };
+
+        window.addEventListener('pywebviewready', function() {
+            document.getElementById('status').innerText = "WINDOWS HOST DETECTED.";
+        });
+
+        setInterval(async function() {
+            if (!SERVER_URL) return;
+            const pollUrl = SERVER_URL.replace("/command", "/poll_phone");
+            try {
+                const response = await fetch(pollUrl);
+                const data = await response.json();
+                if (data.action) executeRemoteOrder(data);
+            } catch (e) { /* Silent */ }
+        }, 2000);
+
+        function executeRemoteOrder(data) {
+            if (typeof ClaudiaHost === 'undefined') return;
+            if (data.action === "launch") ClaudiaHost.launchApp(data.payload);
+            else if (data.action === "toast") ClaudiaHost.showToast(data.payload);
+            else if (data.action === "perm") ClaudiaHost.requestAndroidPermission(data.payload);
+            else if (data.action === "download") ClaudiaHost.forceDownload(data.payload);
+        }
+
+        async function sendCommand() {
+            const text = document.getElementById('cmd-text').value;
+            const device = document.getElementById('cmd-device').value;
+            const status = document.getElementById('status');
+            if (!text) return;
+            
+            status.innerText = `SENDING...`;
+            try {
+                const response = await fetch(SERVER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text, device: device })
+                });
+                const result = await response.json();
+                status.innerText = "ACK: " + (result.status || result.error);
+                document.getElementById('cmd-text').value = "";
+            } catch (e) { status.innerText = "TRANSMISSION ERROR"; }
+        }
+
+        async function uploadFile() {
+            const fileInput = document.getElementById('file-upload');
+            const file = fileInput.files[0];
+            const status = document.getElementById('status');
+            if (!file) {
+                if(typeof ClaudiaHost !== 'undefined') ClaudiaHost.showToast("Select a file first.");
+                return;
+            }
+            const formData = new FormData();
+            formData.append('file', file);
+            status.innerText = "UPLOADING...";
+            const uploadUrl = SERVER_URL.replace("/command", "/upload");
+            try {
+                const response = await fetch(uploadUrl, { method: 'POST', body: formData });
+                if (response.ok) {
+                    fileInput.value = ""; 
+                    status.innerText = "UPLOAD COMPLETE";
+                    if(typeof ClaudiaHost !== 'undefined') ClaudiaHost.showToast("Sent: " + file.name);
+                } else { status.innerText = "UPLOAD ERROR"; }
+            } catch (e) { status.innerText = "CONNECTION FAILED"; }
+        }
+
+        function checkStatus() {
+            if (typeof ClaudiaHost === 'undefined') return;
+            if (ClaudiaHost.isDefaultLauncher()) {
+                document.getElementById('status').innerText = "SYSTEM IS DEFAULT.";
+            } else {
+                if(confirm("Set Claudia as Default?")) ClaudiaHost.openLauncherSettings();
+            }
+        }
+        function reqPerm(perm) { if (typeof ClaudiaHost !== 'undefined') ClaudiaHost.requestAndroidPermission(perm); }
+        function reqPermAll() { if (typeof ClaudiaHost !== 'undefined') ClaudiaHost.requestAllFilesAccess(); }
+    </script>
+</body>
+</html>

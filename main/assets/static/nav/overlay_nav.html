@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { margin: 0; padding: 0; background: transparent; overflow: hidden; height: 100vh; width: 100vw; }
+
+        #bar-container {
+            width: 100%; height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        /* --- ORIENTATION --- */
+        .orient-bottom, .orient-top {
+            flex-direction: row;
+            border-radius: 0;
+        }
+
+        .orient-left, .orient-right {
+            flex-direction: column-reverse;
+            padding: 10px 0;
+            border-radius: 30px;
+        }
+
+        /* Smaller buttons in vertical mode */
+        .orient-left .nav-btn, .orient-right .nav-btn {
+            width: 40px; height: 40px; padding: 8px;
+        }
+
+        /* --- COLLAPSED MODE --- */
+        .collapsed {
+            border: none !important;
+            cursor: pointer;
+            border-radius: 0 !important;
+            touch-action: none;
+        }
+        /* CRITICAL FIX: Use !important to force hide */
+        .collapsed .nav-btn, .collapsed .config-btn { display: none !important; }
+
+        /* --- BUTTONS --- */
+        .nav-btn {
+            background: transparent; border: none; padding: 12px;
+            color: #00FFCC; /* Default Color */
+            transition: 0.2s;
+            flex-shrink: 0; flex-grow: 0;
+            width: 60px; height: 60px;
+            display: block; /* Ensure visible */
+        }
+        .nav-btn:active { transform: scale(0.9); color: white; }
+
+        svg {
+            width: 28px; height: 28px;
+            fill: currentColor;
+            filter: drop-shadow(0 0 2px rgba(0,0,0,0.8));
+        }
+
+        .config-btn {
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50%; width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; margin: 5px; color: #fff;
+        }
+        .config-btn svg { width: 18px; height: 18px; }
+
+    </style>
+</head>
+<body>
+<div id="bar-container" class="orient-bottom expanded" onclick="handleClick()">
+
+    <button id="btn-cog" class="config-btn" onclick="event.stopPropagation(); Android.openNavConfig()">
+        <svg viewBox="0 0 24 24"><path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.35 19.43,11.03L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11.02C4.53,11.34 4.5,11.66 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.04 4.95,18.95L7.44,17.95C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.95L19.05,18.95C19.27,19.04 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" /></svg>
+    </button>
+
+    <button id="btn-sliders" class="nav-btn" onclick="event.stopPropagation(); Android.openSettings()">
+        <svg viewBox="0 0 24 24"><path d="M11,13H21V11H11M6,4H11V6H13V4H21V2H13V0H11V2H6M6,20H13V18H11V20H6M6,9H8V11H6M6,17H8V19H6M6,12H13V14H6M13,10V8H21V10M13,16V14H21V16H13Z" /></svg>
+    </button>
+
+    <button id="btn-back" class="nav-btn" onclick="event.stopPropagation(); Android.triggerBack()">
+        <svg viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+    </button>
+
+    <button id="btn-home" class="nav-btn" onclick="event.stopPropagation(); Android.triggerHome()">
+        <svg style="width:40px;height:40px;" viewBox="0 0 24 24"><path d="M12,5.69L17,10.19V18H15V12H9V18H7V10.19L12,5.69M12,3L2,12H5V20H11V14H13V20H19V12H22L12,3Z" /></svg>
+    </button>
+
+    <button id="btn-recents" class="nav-btn" onclick="event.stopPropagation(); Android.triggerRecents()">
+        <svg viewBox="0 0 24 24"><path d="M4,4H20V20H4V4M6,6V18H18V6H6Z" /></svg>
+    </button>
+
+    <button id="btn-drawer" class="nav-btn" onclick="event.stopPropagation(); Android.openDrawer()">
+        <svg viewBox="0 0 24 24"><path d="M4,4H8V8H4V4M10,4H14V8H10V4M16,4H20V8H16V4M4,10H8V14H4V10M10,10H14V14H10V10M16,10H20V14H16V10M4,16H8V20H4V16M10,16H14V20H10V16M16,16H20V20H16V16Z" /></svg>
+    </button>
+</div>
+
+<script>
+    let isCollapsed = false;
+
+    function updateStyle(pos, mode, hexColor, alpha, iconColors) {
+        const bar = document.getElementById('bar-container');
+        bar.className = 'orient-' + pos + ' ' + mode;
+        isCollapsed = (mode === 'collapsed');
+
+        // --- 1. BAR BACKGROUND ---
+        let r=0,g=0,b=0;
+        const h = hexColor.replace('#', '');
+        if(h.length >= 6) {
+            r = parseInt(h.substring(0,2), 16);
+            g = parseInt(h.substring(2,4), 16);
+            b = parseInt(h.substring(4,6), 16);
+        }
+
+        if(mode === 'collapsed') {
+            bar.style.background = `rgba(${r}, ${g}, ${b}, 0.8)`;
+            bar.style.border = `1px solid rgba(255,255,255,0.4)`;
+            bar.style.backdropFilter = "none";
+        } else {
+            bar.style.background = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            bar.style.border = '1px solid rgba(255,255,255,0.1)';
+            bar.style.backdropFilter = "blur(12px)";
+
+            // --- 2. ICON COLORS (SAFE) ---
+            // CRITICAL FIX: Check if iconColors exists before trying to access properties
+            if(iconColors && typeof iconColors === 'object') {
+                if(iconColors.cog) document.getElementById('btn-cog').style.color = iconColors.cog;
+                if(iconColors.sliders) document.getElementById('btn-sliders').style.color = iconColors.sliders;
+                if(iconColors.back) document.getElementById('btn-back').style.color = iconColors.back;
+                if(iconColors.home) document.getElementById('btn-home').style.color = iconColors.home;
+                if(iconColors.recents) document.getElementById('btn-recents').style.color = iconColors.recents;
+                if(iconColors.drawer) document.getElementById('btn-drawer').style.color = iconColors.drawer;
+            }
+        }
+    }
+
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', e => {
+        if(!isCollapsed) return;
+        if(Math.abs(e.changedTouches[0].screenX - touchStartX) > 20) Android.toggleExpand();
+    });
+
+    function handleClick() {
+        if (isCollapsed) Android.toggleExpand();
+    }
+</script>
+</body>
+</html>

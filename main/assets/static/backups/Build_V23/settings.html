@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#050505">
+
+    <title>Claudia Config</title>
+
+    <style>
+
+        :root { --primary: #00ff41; --bg: #050505; --panel: #111; --text-muted: #666; }
+
+        body { background-color: var(--bg); color: #fff; font-family: monospace; margin: 0; overflow: hidden; }
+
+        
+
+        .screen { 
+
+            padding: 20px; 
+
+            box-sizing: border-box; 
+
+            background: var(--bg); 
+
+            height: 100vh; 
+
+            display: flex; 
+
+            flex-direction: column;
+
+            overflow-y: auto; /* Allows scrolling if list gets too long */
+
+        }
+
+        
+
+        /* SETTINGS STYLES */
+
+        .header-container { margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+
+        h1 { margin: 0; font-size: 24px; letter-spacing: 2px; color: var(--primary); }
+
+        
+
+        .section-header { font-size: 10px; color: var(--text-muted); margin-top: 15px; margin-bottom: 10px; border-bottom: 1px solid #222; }
+
+
+
+        .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 5px; }
+
+        .setting-label { font-size: 12px; letter-spacing: 1px; color: #aaa; }
+
+        
+
+        /* TOGGLE SWITCH STYLE */
+
+        .toggle-switch { width: 40px; height: 20px; background: #333; border-radius: 10px; position: relative; cursor: pointer; transition: 0.3s; }
+
+        .toggle-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: 0.3s; }
+
+        .toggle-switch.active { background: var(--primary); }
+
+        .toggle-switch.active::after { left: 22px; background: #000; }
+
+
+
+        /* BUTTONS */
+
+        .btn-action { background: transparent; border: 1px solid #444; color: #fff; padding: 10px; font-family: monospace; cursor: pointer; width: 100%; margin-top: 5px; font-size: 10px; text-transform: uppercase; transition: 0.2s; }
+
+        .btn-action:active { background: var(--primary); color: #000; }
+
+        .btn-input { background: #111; border: 1px solid #333; color: #fff; padding: 5px; font-family: monospace; width: 60%; }
+
+
+
+        /* --- VISUAL OVERLAYS (HUD & NAV) --- */
+
+        
+
+        /* 1. THE NAV BAR (Android Style) */
+
+        #new-nav-bar {
+
+            position: fixed; bottom: 0; left: 0; right: 0;
+
+            height: 48px; background: #000;
+
+            border-top: 1px solid #333;
+
+            display: none; /* Hidden by default */
+
+            justify-content: space-around; align-items: center;
+
+            z-index: 9999;
+
+        }
+
+        .nav-btn { 
+
+            color: #888; font-size: 20px; font-weight: bold; 
+
+            padding: 10px 20px; cursor: pointer; 
+
+        }
+
+        .nav-btn:active { color: var(--primary); }
+
+
+
+        /* Spacer to prevent content being hidden behind Nav Bar */
+
+        #bottom-spacer { height: 0px; transition: 0.3s; }
+
+
+
+        /* 2. THE HUD OVERLAY */
+
+        #hud-layer {
+
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+
+            pointer-events: none; z-index: 9998; display: none;
+
+        }
+
+        .hud-corner { position: absolute; border-color: var(--primary); border-style: solid; width: 20px; height: 20px; opacity: 0.6; }
+
+        .tl { top: 10px; left: 10px; border-width: 2px 0 0 2px; }
+
+        .tr { top: 10px; right: 10px; border-width: 2px 2px 0 0; }
+
+        .bl { bottom: 10px; left: 10px; border-width: 0 0 2px 2px; }
+
+        .br { bottom: 10px; right: 10px; border-width: 0 2px 2px 0; }
+
+        .hud-text { position: absolute; top: 15px; left: 50%; transform: translateX(-50%); font-size: 10px; color: var(--primary); text-shadow: 0 0 5px var(--primary); }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <div id="settings-view" class="screen">
+
+        <div class="header-container">
+
+             <h1>SYSTEM CONFIG</h1>
+
+        </div>
+
+
+
+        <div class="section-header">INTERFACE</div>
+
+        
+
+        <div class="setting-row">
+
+            <span class="setting-label">FULLSCREEN MODE</span>
+
+            <div id="tog-full" class="toggle-switch" onclick="toggleSetting('fullscreen')"></div>
+
+        </div>
+
+
+
+        <div class="setting-row">
+
+            <span class="setting-label">CUSTOM HUD</span>
+
+            <div id="tog-hud" class="toggle-switch" onclick="toggleSetting('hud')"></div>
+
+        </div>
+
+
+
+        <div class="setting-row">
+
+            <span class="setting-label">VIRTUAL NAV BAR</span>
+
+            <div id="tog-nav" class="toggle-switch" onclick="toggleSetting('nav')"></div>
+
+        </div>
+
+
+
+        <div class="section-header">DIAGNOSTICS</div>
+
+
+
+        <div class="setting-row">
+
+            <span class="setting-label">FLASHLIGHT</span>
+
+            <button class="btn-action" onclick="testFlashlight()" style="width: auto;">TEST</button>
+
+        </div>
+
+
+
+        <div class="setting-row">
+
+            <span class="setting-label">HAPTICS</span>
+
+            <button class="btn-action" onclick="testVibrate()" style="width: auto;">TEST</button>
+
+        </div>
+
+
+
+        <div class="setting-row" style="flex-direction: column; align-items: flex-start;">
+
+            <span class="setting-label" style="margin-bottom: 5px;">SMS TEST</span>
+
+            <div style="display: flex; width: 100%; gap: 5px;">
+
+                <input type="tel" id="sms-num" class="btn-input" placeholder="NUMBER">
+
+                <button class="btn-action" onclick="testSMS()">SEND</button>
+
+            </div>
+
+        </div>
+
+
+
+        <div style="flex-grow: 1;"></div>
+
+        
+
+        <button id="btn-reload" class="btn-action" onclick="forceSystemReload()" style="border-color: var(--primary); color: var(--primary);">
+
+            [ FORCE RELOAD ]
+
+        </button>
+
+
+
+        <button class="btn-action" onclick="goHome()" style="border-color: #444; color: #888; margin-bottom: 10px;">
+
+            &lt; RETURN TO DESKTOP
+
+        </button>
+
+
+
+        <div id="bottom-spacer"></div>
+
+    </div>
+
+
+
+    <div id="new-nav-bar">
+
+        <div class="nav-btn" onclick="goBack()">&#9664;</div> 
+
+        <div class="nav-btn" onclick="goHome()" style="font-size: 24px;">&#9673;</div>
+
+        <div class="nav-btn" onclick="forceSystemReload()">&#9632;</div>
+
+    </div>
+
+
+
+    <div id="hud-layer">
+
+        <div class="hud-corner tl"></div>
+
+        <div class="hud-corner tr"></div>
+
+        <div class="hud-corner bl"></div>
+
+        <div class="hud-corner br"></div>
+
+        <div class="hud-text">SECURE//CONFIG</div>
+
+    </div>
+
+
+
+    <script>
+
+        // --- INITIALIZE ---
+
+        window.onload = function() {
+
+            // Restore Toggles & UI State
+
+            checkAndRestore('fullscreen', 'tog-full');
+
+            
+
+            // Restore HUD
+
+            const hudState = localStorage.getItem('claudia_hud') === 'true';
+
+            updateToggle('tog-hud', hudState);
+
+            toggleHUD(hudState);
+
+
+
+            // Restore Nav Bar
+
+            const navState = localStorage.getItem('claudia_nav') === 'true';
+
+            updateToggle('tog-nav', navState);
+
+            toggleNavBar(navState);
+
+        };
+
+
+
+        function checkAndRestore(keyName, elementId) {
+
+            if (localStorage.getItem('claudia_' + keyName) === 'true') {
+
+                updateToggle(elementId, true);
+
+            }
+
+        }
+
+
+
+        // --- CORE TOGGLE LOGIC ---
+
+        function toggleSetting(setting) {
+
+            const key = 'claudia_' + setting;
+
+            const currentState = localStorage.getItem(key) === 'true';
+
+            const newState = !currentState;
+
+            
+
+            localStorage.setItem(key, newState);
+
+            
+
+            // Visual Update
+
+            let elemId = '';
+
+            if(setting === 'fullscreen') elemId = 'tog-full';
+
+            if(setting === 'hud') elemId = 'tog-hud';
+
+            if(setting === 'nav') elemId = 'tog-nav';
+
+            
+
+            updateToggle(elemId, newState);
+
+            
+
+            // Functional Update
+
+            if (setting === 'fullscreen' && typeof ClaudiaHost !== 'undefined') ClaudiaHost.setFullscreen(newState);
+
+            if (setting === 'nav') toggleNavBar(newState);
+
+            if (setting === 'hud') toggleHUD(newState);
+
+        }
+
+
+
+        function updateToggle(id, isActive) {
+
+            const el = document.getElementById(id);
+
+            if(el) {
+
+                if(isActive) el.classList.add('active');
+
+                else el.classList.remove('active');
+
+            }
+
+        }
+
+
+
+        // --- NAVIGATION LOGIC ---
+
+        function toggleNavBar(show) {
+
+            const nav = document.getElementById('new-nav-bar');
+
+            const spacer = document.getElementById('bottom-spacer');
+
+            
+
+            if(show) {
+
+                nav.style.display = 'flex';
+
+                spacer.style.height = '60px'; // Push content up
+
+            } else {
+
+                nav.style.display = 'none';
+
+                spacer.style.height = '0px';
+
+            }
+
+        }
+
+
+
+        function toggleHUD(show) {
+
+            const hud = document.getElementById('hud-layer');
+
+            if(hud) hud.style.display = show ? 'block' : 'none';
+
+        }
+
+
+
+        function goHome() {
+
+            // Forces navigation to index.html (The Desktop)
+
+            window.location.assign("index.html");
+
+        }
+
+
+
+        function goBack() {
+
+            // Goes back in browser history
+
+            window.history.back();
+
+        }
+
+
+
+        // --- DIAGNOSTICS ---
+
+        function testFlashlight() {
+
+            if(typeof ClaudiaHost !== 'undefined') ClaudiaHost.toggleFlashlight(true);
+
+            setTimeout(() => { 
+
+                if(typeof ClaudiaHost !== 'undefined') ClaudiaHost.toggleFlashlight(false); 
+
+            }, 1000);
+
+        }
+
+
+
+        function testVibrate() {
+
+            if(typeof ClaudiaHost !== 'undefined') ClaudiaHost.vibrate(500);
+
+        }
+
+
+
+        function testSMS() {
+
+            const num = document.getElementById('sms-num').value;
+
+            if(!num) { alert("ENTER NUMBER"); return; }
+
+            if(typeof ClaudiaHost !== 'undefined') ClaudiaHost.sendSMS(num, "TEST MSG");
+
+        }
+
+
+
+        function forceSystemReload() {
+
+            window.location.reload();
+
+        }
+
+    </script>
+
+</body>
+
+</html>

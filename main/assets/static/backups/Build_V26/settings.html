@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050505">
+    <title>Claudia Config</title>
+    
+    <link rel="stylesheet" href="style.css?v=6">
+</head>
+<body>
+
+    <div id="settings-view" class="screen" style="display: flex; flex-direction: column; height: 100vh;">
+        <h2 style="text-align: center; margin-bottom: 30px; color: var(--primary); letter-spacing: 2px;">SYSTEM CONFIG</h2>
+
+        <div class="setting-row">
+            <span class="setting-label">FULLSCREEN (HIDE BARS)</span>
+            <div id="tog-full" class="toggle-switch" onclick="toggleSetting('fullscreen')"></div>
+        </div>
+
+        <div class="setting-row">
+            <span class="setting-label">CUSTOM CLAUDIA HUD</span>
+            <div id="tog-hud" class="toggle-switch" onclick="toggleSetting('hud')"></div>
+        </div>
+
+        <div style="flex-grow: 1;"></div>
+        
+        <button onclick="window.location.href='index.html'" style="margin-top: 20px;">[ EXIT CONFIG ]</button>
+    </div>
+
+    <script src="settings.js?v=1"></script>
+</body>
+</html>
