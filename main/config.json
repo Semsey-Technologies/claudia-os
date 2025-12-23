@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "repos": [
+    "https://raw.githubusercontent.com/Semsey-Technologies/claudia-os/main/main/"
+  ],
+  "modules": {
+    "index": "index.html",
+    "launcher": "Launcher.apk",
+    "dialer": "Dialer.apk"
+  }
+}
