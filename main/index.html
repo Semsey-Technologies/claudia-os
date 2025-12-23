@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+        :root { --neon: #00FFCC; --bg: #050505; --card: rgba(0, 255, 204, 0.03); }
+        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin: 0; padding: 20px; }
+        
+        header { border-bottom: 2px solid var(--neon); padding-bottom: 10px; margin-bottom: 30px; text-align: center; }
+        .glitch { font-size: 1.5rem; letter-spacing: 5px; text-transform: uppercase; }
+
+        .sector-title { border-left: 3px solid var(--neon); padding-left: 10px; margin: 30px 0 15px 0; font-size: 0.9rem; color: #fff; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        
+        .app-card { background: var(--card); border: 1px solid rgba(0, 255, 204, 0.2); padding: 15px; display: flex; flex-direction: column; transition: 0.2s; }
+        .app-card:hover { border-color: var(--neon); background: rgba(0, 255, 204, 0.1); }
+
+        .thumb { width: 100%; height: 80px; background: #111; margin-bottom: 10px; border: 1px dashed #333; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; opacity: 0.5; }
+        
+        .title { font-weight: bold; font-size: 0.8rem; margin-bottom: 5px; }
+        .desc { font-size: 0.6rem; opacity: 0.7; line-height: 1.2; height: 35px; overflow: hidden; }
+
+        .btn { margin-top: 15px; background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 5px; font-size: 0.7rem; cursor: pointer; font-family: inherit; }
+        .btn:active { background: var(--neon); color: #000; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="glitch">Neural Repository</div>
+    <div style="font-size: 0.6rem; opacity: 0.6;">UPLINK_STATUS: ACTIVE // VER: 2.0.4</div>
+</header>
+
+<div class="sector-title">SECTOR_01: COMMUNICATION</div>
+<div class="grid">
+    <div class="app-card">
+        <div class="thumb">[PHASE_MSG]</div>
+        <div class="title">Phase Messenger</div>
+        <div class="desc">End-to-end encrypted neural chat node.</div>
+        <button class="btn" onclick="install('Messenger.apk')">[ INSTALL ]</button>
+    </div>
+    <div class="app-card">
+        <div class="thumb">[VOX_LINK]</div>
+        <div class="title">Vox Dialer</div>
+        <div class="desc">Encrypted voice protocol with noise-masking.</div>
+        <button class="btn" onclick="install('Dialer.apk')">[ INSTALL ]</button>
+    </div>
+</div>
+
+<div class="sector-title">SECTOR_02: CORE_SYSTEM</div>
+<div class="grid">
+    <div class="app-card">
+        <div class="thumb">[NOVA_SHELL]</div>
+        <div class="title">Nova Launcher</div>
+        <div class="desc">The primary neural interface for the OS.</div>
+        <button class="btn" onclick="install('Launcher.apk')">[ INSTALL ]</button>
+    </div>
+    <div class="app-card">
+        <div class="thumb">[GHOST_FS]</div>
+        <div class="title">Ghost Files</div>
+        <div class="desc">Deep-sector file explorer with hidden partitions.</div>
+        <button class="btn" onclick="install('GhostFiles.apk')">[ INSTALL ]</button>
+    </div>
+    <div class="app-card">
+        <div class="thumb">[NEOPLANET]</div>
+        <div class="title">NeoPlanet</div>
+        <div class="desc">Decentralized web exploration node.</div>
+        <button class="btn" onclick="install('NeoPlanet.apk')">[ INSTALL ]</button>
+    </div>
+</div>
+
+<div class="sector-title">SECTOR_03: SHIELD_PROTCOLS</div>
+<div class="grid">
+    <div class="app-card">
+        <div class="thumb">[AEGIS_WALL]</div>
+        <div class="title">Aegis Firewall</div>
+        <div class="desc">Real-time threat detection and kill-switch.</div>
+        <button class="btn" onclick="install('Aegis.apk')">[ INSTALL ]</button>
+    </div>
+    <div class="app-card">
+        <div class="thumb">[CLOAK_MODE]</div>
+        <div class="title">Cloak Identity</div>
+        <div class="desc">Identity obfuscation and location spoofing.</div>
+        <button class="btn" onclick="install('Cloak.apk')">[ INSTALL ]</button>
+    </div>
+</div>
+
+<script>
+    function install(apk) {
+        if (window.AndroidInterface) {
+            window.AndroidInterface.requestModuleDownload(apk);
+        }
+    }
+</script>
+
+</body>
+</html>
