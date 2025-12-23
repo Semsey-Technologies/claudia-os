@@ -4,27 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        :root { --neon: #00FFCC; --bg: #050505; --card: rgba(0, 255, 204, 0.03); }
-        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin: 0; padding: 20px; }
-        
-        header { border-bottom: 2px solid var(--neon); padding-bottom: 10px; margin-bottom: 30px; text-align: center; }
-        .glitch { font-size: 1.5rem; letter-spacing: 5px; text-transform: uppercase; }
+    :root {
+        --neon: #00ffcc;
+        --neon-soft: rgba(0, 255, 204, 0.6);
+        --bg: #050505;
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --card-border: rgba(0, 255, 204, 0.15);
+        --radius: 12px;
+        --blur: 12px;
+        --font: 'JetBrains Mono', 'Courier New', monospace;
+    }
 
-        .sector-title { border-left: 3px solid var(--neon); padding-left: 10px; margin: 30px 0 15px 0; font-size: 0.9rem; color: #fff; }
+    body {
+        background: var(--bg);
+        color: var(--neon);
+        font-family: var(--font);
+        margin: 0;
+        padding: 20px;
+        -webkit-font-smoothing: antialiased;
+    }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
-        
-        .app-card { background: var(--card); border: 1px solid rgba(0, 255, 204, 0.2); padding: 15px; display: flex; flex-direction: column; transition: 0.2s; }
-        .app-card:hover { border-color: var(--neon); background: rgba(0, 255, 204, 0.1); }
+    header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(0,255,204,0.2);
+    }
 
-        .thumb { width: 100%; height: 80px; background: #111; margin-bottom: 10px; border: 1px dashed #333; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; opacity: 0.5; }
-        
-        .title { font-weight: bold; font-size: 0.8rem; margin-bottom: 5px; }
-        .desc { font-size: 0.6rem; opacity: 0.7; line-height: 1.2; height: 35px; overflow: hidden; }
+    .glitch {
+        font-size: 1.6rem;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: var(--neon);
+        text-shadow: 0 0 8px var(--neon-soft);
+    }
 
-        .btn { margin-top: 15px; background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 5px; font-size: 0.7rem; cursor: pointer; font-family: inherit; }
-        .btn:active { background: var(--neon); color: #000; }
-    </style>
+    .sector-title {
+        margin: 40px 0 15px 0;
+        font-size: 0.85rem;
+        color: #fff;
+        opacity: 0.8;
+        padding-left: 12px;
+        border-left: 3px solid var(--neon);
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 18px;
+    }
+
+    .app-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        padding: 18px;
+        border-radius: var(--radius);
+        backdrop-filter: blur(var(--blur));
+        transition: 0.25s ease;
+        box-shadow: 0 0 0 transparent;
+    }
+
+    .app-card:hover {
+        border-color: var(--neon);
+        box-shadow: 0 0 12px rgba(0,255,204,0.25);
+        transform: translateY(-3px);
+    }
+
+    .thumb {
+        width: 100%;
+        height: 90px;
+        background: rgba(255,255,255,0.05);
+        border-radius: var(--radius);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.65rem;
+        opacity: 0.7;
+        border: 1px dashed rgba(255,255,255,0.1);
+    }
+
+    .title {
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+        color: #fff;
+    }
+
+    .desc {
+        font-size: 0.65rem;
+        opacity: 0.75;
+        line-height: 1.3;
+        height: 38px;
+        overflow: hidden;
+        color: #d0fff5;
+    }
+
+    .btn {
+        margin-top: 15px;
+        background: transparent;
+        border: 1px solid var(--neon);
+        color: var(--neon);
+        padding: 6px;
+        font-size: 0.7rem;
+        cursor: pointer;
+        border-radius: var(--radius);
+        transition: 0.2s;
+        font-family: var(--font);
+    }
+
+    .btn:hover {
+        background: rgba(0,255,204,0.15);
+    }
+
+    .btn:active {
+        background: var(--neon);
+        color: #000;
+    }
+</style>
 </head>
 <body>
 
